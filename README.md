@@ -91,7 +91,7 @@ You need somewhere for your project to reside. Create a directory somewhere and 
 mvn archetype:generate -DgroupId=com.example.testapp -DartifactId=my-test-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
 ```
 
-Now, Let's Open the pom.xml file, and let's populate with this configuration
+Now, Let's Open the ```pom.xml``` file, and let's populate with this configuration
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -145,3 +145,106 @@ Now, Let's Open the pom.xml file, and let's populate with this configuration
 </project>
 ```
 
+After load all the dependencies, you have a folder called ```test``` where is your test class.
+
+Let's create a simple class to test.
+
+A person start in the coordenate x = 0 and y = 0. When this person moves to a direction (N, S, E, W) the position of this person changes depending of the movement:
+
+N = y + 1
+S = y - 1
+W = x - 1
+E - x + 1
+
+Create a function that is passed as a input the movement of this person and the final position of this person in x and y and return a boolean if the final position is correct
+
+Ex: input: "NNSN", 0, 2
+    output: true
+
+Create a unit test for this class to
+
+So, to resolve this, we have to create a class that receive a String, transform this string is a Array of chars, and compare if the final position passed is correct 
+
+
+```java
+package com.example.testapp;
+
+public class App {
+
+    public Boolean reachedDestination(String moves, int x, int y) {
+        int currentX = 0;
+        int currentY = 0;
+
+        for (char move : moves.toCharArray()) {
+            switch (move) {
+                case 'N':
+                    currentY++;
+                    break;
+                case 'S':
+                    currentY--;
+                    break;
+                case 'E':
+                    currentX++;
+                    break;
+                case 'W':
+                    currentX--;
+                    break;
+                default:
+                    // Ignore invalid moves
+            }
+        }
+
+        return currentX == x && currentY == y;
+    }
+}
+```
+
+Now, lets create the Unit Test for this function.
+
+In the ```test``` folder, create a class called ```AppTest```
+
+```java
+package com.example.testapp;
+
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class AppTest {
+    
+    @Test
+    public void shouldMoveNorthAndReachTheDestination() {
+        //given
+        App findMyDestination = new App();
+
+        //when
+        boolean result = findMyDestination.reachedDestination("NNN", 0, 3);
+
+        //then
+        assertThat(result).isTrue();
+    }
+}
+```
+
+When all your test cases is finished, run ```mvn test``` to run the test
+
+You will have this output
+
+```
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.testapp.AppTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in com.example.testapp.AppTest
+[INFO] 
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.927 s
+[INFO] Finished at: 2024-01-14T14:24:11Z
+[INFO] ------------------------------------------------------------------------
+```
